@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
 {
     public Camera camera;
     public Nut nut;
+    public Trajectory trajectory;
 
     public LayerMask nutLayer;
     public LayerMask enemiesLayer;
@@ -28,19 +30,31 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     private bool hasNut = false;
     private bool isDash = false;
+    //private bool 
+
+    private IEnumerator coroutine;
 
 
     void Start()
     {
         camera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
+        coroutine = Cooldown();
     }
 
     void FixedUpdate()
     {
         SettingValues();
         MoveHorizontally();
-        Debug.DrawLine(startPoint, endPoint);
+        trajectory.UpdateDots(nut.transform.position, force);
+    }
+
+    public void SettingValues()
+    {
+        startPoint = transform.position;
+        endPoint = camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        direction = (endPoint - startPoint).normalized;
+        force = direction * throwForce;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -54,7 +68,15 @@ public class PlayerMovement : Singleton<PlayerMovement>
         {
             return;
         }
-        nut.Throw(force);
+        if(context.performed)
+        {
+            hasNut = false;
+            nut.rb.isKinematic = false;
+            nut.transform.parent = null;
+            nut.Throw(force);
+            trajectory.Hide();
+            StartCoroutine(Cooldown());
+        }
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -67,26 +89,28 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("NoNut!!");
-        if(collision.gameObject.layer == nutLayer)
+        if(collision.gameObject.layer == nutLayer.GetIndex())
         {
-            Debug.Log("HasNut!");
+            StopCoroutine(coroutine);
             hasNut = true;
+            trajectory.Show();
             nut.transform.parent = transform;
+            nut.transform.position = transform.position;
+            nut.rb.velocity = Vector3.zero;
+            nut.rb.isKinematic = true;
+            Physics2D.IgnoreCollision(nut.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>(), true);
         }
-    }
-
-
-    public void SettingValues()
-    {
-        startPoint = transform.position;
-        endPoint = camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        direction = (startPoint - endPoint).normalized;
-        force = direction * throwForce;
     }
 
     public void MoveHorizontally()
     {
         rb.velocity = Vector2.right * movement * playerSpeed * Time.fixedDeltaTime;
+    }
+
+    public IEnumerator Cooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Physics2D.IgnoreCollision(nut.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>(), false);
     }
 }
