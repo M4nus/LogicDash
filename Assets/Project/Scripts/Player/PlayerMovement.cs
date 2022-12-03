@@ -30,16 +30,16 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     private bool hasNut = false;
     private bool isDash = false;
+    private bool canDash = false;
     //private bool 
 
-    private IEnumerator coroutine;
+    private Coroutine cooldown;
 
 
     void Start()
     {
         camera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
-        coroutine = Cooldown();
     }
 
     void FixedUpdate()
@@ -47,6 +47,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
         SettingValues();
         MoveHorizontally();
         trajectory.UpdateDots(nut.transform.position, force);
+        Debug.Log("CanDash? : " + isDash);
     }
 
     public void SettingValues()
@@ -75,15 +76,37 @@ public class PlayerMovement : Singleton<PlayerMovement>
             nut.transform.parent = null;
             nut.Throw(force);
             trajectory.Hide();
-            StartCoroutine(Cooldown());
+            canDash = false;
+            cooldown = StartCoroutine(Cooldown());
         }
     }
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if(hasNut || isDash)
+        if(hasNut || isDash || !canDash)
         {
             return;
+        }
+
+        if(context.performed)
+        {
+            rb.MovePosition(nut.transform.position);
+            isDash = true;
+            canDash = false;
+            cooldown = StartCoroutine(Cooldown());
+        }
+    }
+
+    public void Summon(InputAction.CallbackContext context)
+    {
+        if(hasNut)
+        {
+            return;
+        }
+
+        if(context.performed)
+        {
+            nut.transform.localPosition = transform.localPosition;
         }
     }
 
@@ -91,15 +114,25 @@ public class PlayerMovement : Singleton<PlayerMovement>
     {
         if(collision.gameObject.layer == nutLayer.GetIndex())
         {
-            StopCoroutine(coroutine);
-            hasNut = true;
-            trajectory.Show();
-            nut.transform.parent = transform;
-            nut.transform.position = transform.position;
-            nut.rb.velocity = Vector3.zero;
-            nut.rb.isKinematic = true;
-            Physics2D.IgnoreCollision(nut.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>(), true);
+            if(cooldown != null)
+            {
+                StopCoroutine(cooldown);
+            }
+            isDash = false;
+            CatchNut();
         }
+    }
+
+    public void CatchNut()
+    {
+        hasNut = true;
+        nut.transform.parent = transform;
+        nut.transform.position = transform.position;
+        nut.rb.velocity = Vector3.zero;
+        nut.rb.isKinematic = true;
+
+        Physics2D.IgnoreCollision(nut.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>(), true);
+        trajectory.Show();
     }
 
     public void MoveHorizontally()
@@ -109,8 +142,10 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     public IEnumerator Cooldown()
     {
-        yield return new WaitForSeconds(0.5f);
-
+        yield return new WaitForSeconds(0.3f);
+        Debug.Log("Here I am!");
         Physics2D.IgnoreCollision(nut.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>(), false);
+        isDash = false;
+        canDash = true;
     }
 }
