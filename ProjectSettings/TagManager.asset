@@ -11,12 +11,12 @@ TagManager:
   - 
   - Water
   - UI
-  - Player
+  - Player/Player
   - Nut
   - Enemies
   - Enviro/Wall
-  - 
-  - 
+  - Enviro/Ground
+  - Player/Line
   - 
   - 
   - 

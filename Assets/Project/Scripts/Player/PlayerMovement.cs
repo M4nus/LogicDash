@@ -3,43 +3,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class PlayerMovement : Singleton<PlayerMovement>
 {
     public Camera camera;
     public Nut nut;
     public Trajectory trajectory;
+    public LineRenderer line;
+    public VisualEffect trail;
 
     public LayerMask nutLayer;
     public LayerMask enemiesLayer;
     public LayerMask wallLayer;
+    public LayerMask groundLayer;
+    public LayerMask ignoreLayer;
 
     [Range(0f, 1000f)]
     public float playerSpeed;
     public float throwForce;
+    public float teleportDelay;
 
     private Vector2 force;
     private Vector2 startPoint;
     private Vector2 endPoint;
     private Vector2 direction;
-
-
+    private Vector2 oldPos;
 
     private Rigidbody2D rb;
+    private Animator anim;
     private float movement;
+    private float distToGround;
 
     private bool hasNut = false;
     private bool isDash = false;
     private bool canDash = false;
-    //private bool 
 
     private Coroutine cooldown;
 
+    public Material lineBefore;
+    public Material lineAfter;
+
+
+    #region Behaviour
 
     void Start()
     {
         camera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        distToGround = GetComponent<Collider2D>().bounds.extents.y;
     }
 
     void FixedUpdate()
@@ -47,20 +60,31 @@ public class PlayerMovement : Singleton<PlayerMovement>
         SettingValues();
         MoveHorizontally();
         trajectory.UpdateDots(nut.transform.position, force);
-        Debug.Log("CanDash? : " + isDash);
+        line.gameObject.SetActive(canDash);
     }
 
-    public void SettingValues()
+    public void OnCollisionEnter2D(Collision2D collision)
     {
-        startPoint = transform.position;
-        endPoint = camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        direction = (endPoint - startPoint).normalized;
-        force = direction * throwForce;
+        if(collision.gameObject.layer == nutLayer.GetIndex())
+        {
+            if(cooldown != null)
+            {
+                StopCoroutine(cooldown);
+            }
+            isDash = false;
+            CatchNut();
+        }
     }
 
-    public void Move(InputAction.CallbackContext context)
+#endregion
+
+#region Controls
+
+public void Move(InputAction.CallbackContext context)
     {
         movement = context.ReadValue<float>();
+        anim.SetFloat("isMoving", Mathf.Abs(movement));
+        GetComponent<SpriteRenderer>().flipX = movement >= 0 ? false : true;
     }
 
     public void Throw(InputAction.CallbackContext context)
@@ -90,10 +114,18 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
         if(context.performed)
         {
-            rb.MovePosition(nut.transform.position);
+            oldPos = new Vector3(transform.localPosition.x, transform.localPosition.y - 0.2f, 0f);
+            transform.localPosition = nut.transform.localPosition;
+            rb.velocity = Vector2.zero;
             isDash = true;
             canDash = false;
+
+            trail.SetVector3("Start Position", oldPos);
+            trail.SetVector3("End Position", nut.transform.localPosition);
+            trail.SendEvent("OnDash");
+
             cooldown = StartCoroutine(Cooldown());
+
         }
     }
 
@@ -110,21 +142,43 @@ public class PlayerMovement : Singleton<PlayerMovement>
         }
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    #endregion
+
+    #region Functionality
+
+    public void SettingValues()
     {
-        if(collision.gameObject.layer == nutLayer.GetIndex())
+        line.SetPosition(0, new Vector3(transform.localPosition.x, transform.localPosition.y - 0.3f, 0f));
+        line.SetPosition(1, (line.GetPosition(2) + line.GetPosition(0)) / 2.0f);
+        line.SetPosition(2, nut.transform.localPosition);
+
+        if(Physics2D.Linecast(transform.localPosition, nut.transform.localPosition, enemiesLayer))
         {
-            if(cooldown != null)
-            {
-                StopCoroutine(cooldown);
-            }
-            isDash = false;
-            CatchNut();
+            line.sharedMaterial = lineAfter;
         }
+        else
+        {
+            line.sharedMaterial = lineBefore;
+        }
+
+        startPoint = transform.position;
+        endPoint = camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        
+        if(Gamepad.current != null && Gamepad.current.rightStick.ReadValue() != Vector2.zero)
+        {
+            direction = Gamepad.current.rightStick.ReadValue();
+        }
+        else
+        {
+            direction = (endPoint - startPoint).normalized;
+        }
+
+        force = direction * throwForce;
     }
 
     public void CatchNut()
     {
+        canDash = false;
         hasNut = true;
         nut.transform.parent = transform;
         nut.transform.position = transform.position;
@@ -135,17 +189,31 @@ public class PlayerMovement : Singleton<PlayerMovement>
         trajectory.Show();
     }
 
+    private bool IsGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector3.up, distToGround + 0.3f, ~ignoreLayer);
+        bool isGrounded = (hit.collider != null);
+
+        anim.SetBool("isFlying", !isGrounded);
+        return isGrounded;
+    }
+
     public void MoveHorizontally()
     {
-        rb.velocity = Vector2.right * movement * playerSpeed * Time.fixedDeltaTime;
+        if(!IsGrounded())
+        {
+            return;
+        }
+        rb.velocity = new Vector2(movement * playerSpeed * Time.fixedDeltaTime, rb.velocity.y);
     }
 
     public IEnumerator Cooldown()
     {
-        yield return new WaitForSeconds(0.3f);
-        Debug.Log("Here I am!");
+        yield return new WaitForSeconds(teleportDelay);
         Physics2D.IgnoreCollision(nut.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>(), false);
         isDash = false;
         canDash = true;
     }
+
+    #endregion
 }
