@@ -12,19 +12,19 @@ TagManager:
   - Water
   - UI
   - Player/Player
+  - Player/Line
   - Nut
-  - Enemies
   - Enviro/Wall
   - Enviro/Ground
-  - Player/Line
+  - 
+  - 
+  - Enemies/Spike
+  - Enemies/Thought
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Trigger/Door
   - 
   - 
   - 

@@ -12,6 +12,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
     public Trajectory trajectory;
     public LineRenderer line;
     public VisualEffect trail;
+    public Transform spawnPoint;
 
     public LayerMask nutLayer;
     public LayerMask enemiesLayer;
@@ -30,8 +31,10 @@ public class PlayerMovement : Singleton<PlayerMovement>
     private Vector2 direction;
     private Vector2 oldPos;
 
-    private Rigidbody2D rb;
-    private Animator anim;
+    [HideInInspector]
+    public Rigidbody2D rb;
+    [HideInInspector]
+    public Animator anim;
     private float movement;
     private float distToGround;
 
@@ -53,6 +56,8 @@ public class PlayerMovement : Singleton<PlayerMovement>
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         distToGround = GetComponent<Collider2D>().bounds.extents.y;
+
+        GameManager.Instance.Spawn(spawnPoint.localPosition);
     }
 
     void FixedUpdate()
@@ -89,7 +94,7 @@ public void Move(InputAction.CallbackContext context)
 
     public void Throw(InputAction.CallbackContext context)
     {
-        if(!hasNut)
+        if(!hasNut || !GameManager.Instance.canMove)
         {
             return;
         }
@@ -107,7 +112,7 @@ public void Move(InputAction.CallbackContext context)
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if(hasNut || isDash || !canDash)
+        if(hasNut || isDash || !canDash || !GameManager.Instance.canMove)
         {
             return;
         }
@@ -200,7 +205,7 @@ public void Move(InputAction.CallbackContext context)
 
     public void MoveHorizontally()
     {
-        if(!IsGrounded())
+        if(!IsGrounded() || !GameManager.Instance.canMove)
         {
             return;
         }
