@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -9,6 +8,7 @@ public class GameManager : Singleton<GameManager>
     public float spawnDelay = 0.2f;
 
     public bool canMove = true;
+    public bool isDead = false;
 
 
     public void Spawn(Vector3 spawnPoint)
@@ -23,6 +23,11 @@ public class GameManager : Singleton<GameManager>
         player.transform.localRotation = Quaternion.identity;
         player.anim.SetBool("isDead", false);
 
+        if(!player.hasNut)
+        {
+            player.nut.transform.localPosition = player.nutSpawnPoint.localPosition;
+        }
+        CameraShake.Instance.Shake(0.1f, spawnDelay);
         StartCoroutine(WaitForSpawn(spawnDelay));
     }
 
@@ -31,6 +36,7 @@ public class GameManager : Singleton<GameManager>
         PlayerMovement player = PlayerMovement.Instance;
 
         canMove = false;
+        isDead = true;
         player.anim.SetBool("isDead", true);
     }
 

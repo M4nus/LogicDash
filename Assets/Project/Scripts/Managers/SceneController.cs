@@ -1,7 +1,10 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class SceneController : Singleton<SceneController>
+public class SceneController : SingletonPersistent<SceneController>
 {
     #region Variables
 
@@ -9,7 +12,14 @@ public class SceneController : Singleton<SceneController>
 
     #endregion
 
+    private bool flag = false;
+
     #region Behaviour
+
+    public void Start()
+    {
+        currentScene = SceneManager.GetActiveScene().buildIndex;
+    }
 
     public void ChangeLevel(int sceneIndex)
     {
@@ -32,30 +42,8 @@ public class SceneController : Singleton<SceneController>
 
     private void LoadLevel(int sceneIndex)
     {
-        UnloadLevel();
-        if(sceneIndex <= 0)
-        {
-            sceneIndex = 1;
-        }
-        if(sceneIndex > SceneManager.sceneCountInBuildSettings - 1)
-        {
-            sceneIndex = SceneManager.sceneCountInBuildSettings - 1;
-        }
-
-        SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+        SceneManager.LoadScene(sceneIndex);
         currentScene = sceneIndex;
-    }
-
-    private void UnloadLevel()
-    {
-        if(currentScene <= 0)
-        {
-            currentScene = 0;
-            return;
-        }
-
-        SceneManager.UnloadSceneAsync(currentScene);
-        currentScene = 0;
     }
     #endregion
 }

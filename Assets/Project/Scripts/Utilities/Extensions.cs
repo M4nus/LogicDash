@@ -6,4 +6,9 @@ public static class Extensions
     {
         return (int)Mathf.Log(mask.value, 2);
     }
+
+    public static bool Contains(this LayerMask mask, int layer)
+    {
+        return mask == (mask | (1 << layer));
+    }
 }

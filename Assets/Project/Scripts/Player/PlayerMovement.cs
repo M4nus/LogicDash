@@ -12,7 +12,9 @@ public class PlayerMovement : Singleton<PlayerMovement>
     public Trajectory trajectory;
     public LineRenderer line;
     public VisualEffect trail;
+    public ParticleSystem dashEffect;
     public Transform spawnPoint;
+    public Transform nutSpawnPoint;
 
     public LayerMask nutLayer;
     public LayerMask enemiesLayer;
@@ -38,7 +40,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
     private float movement;
     private float distToGround;
 
-    private bool hasNut = false;
+    public bool hasNut = false;
     private bool isDash = false;
     private bool canDash = false;
 
@@ -68,9 +70,21 @@ public class PlayerMovement : Singleton<PlayerMovement>
         line.gameObject.SetActive(canDash);
     }
 
+    private void Update()
+    {
+        if(GameManager.Instance.isDead)
+        {
+            if(Keyboard.current.anyKey.isPressed)
+            {
+                GameManager.Instance.isDead = false;
+                GameManager.Instance.Spawn(spawnPoint.position);
+            }
+        }
+    }
+
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.layer == nutLayer.GetIndex())
+        if(nutLayer.Contains(collision.gameObject.layer))
         {
             if(cooldown != null)
             {
@@ -78,6 +92,11 @@ public class PlayerMovement : Singleton<PlayerMovement>
             }
             isDash = false;
             CatchNut();
+        }
+        if(enemiesLayer.Contains(collision.gameObject.layer))
+        {
+            CameraShake.Instance.Shake(0.2f, 0.2f);
+            GameManager.Instance.Death();
         }
     }
 
@@ -119,6 +138,7 @@ public void Move(InputAction.CallbackContext context)
 
         if(context.performed)
         {
+            CameraShake.Instance.Shake(0.1f, 0.2f);
             oldPos = new Vector3(transform.localPosition.x, transform.localPosition.y - 0.2f, 0f);
             transform.localPosition = nut.transform.localPosition;
             rb.velocity = Vector2.zero;
@@ -128,6 +148,8 @@ public void Move(InputAction.CallbackContext context)
             trail.SetVector3("Start Position", oldPos);
             trail.SetVector3("End Position", nut.transform.localPosition);
             trail.SendEvent("OnDash");
+            dashEffect = Instantiate(dashEffect, transform.position, Quaternion.identity);
+            Destroy(dashEffect, 2f);
 
             cooldown = StartCoroutine(Cooldown());
 
@@ -143,6 +165,7 @@ public void Move(InputAction.CallbackContext context)
 
         if(context.performed)
         {
+            CameraShake.Instance.Shake(0.1f, 0.2f);
             nut.transform.localPosition = transform.localPosition;
         }
     }

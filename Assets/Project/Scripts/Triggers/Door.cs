@@ -37,6 +37,7 @@ public class Door : MonoBehaviour
             if(Keyboard.current.eKey.IsPressed() || (Gamepad.current != null && Gamepad.current.buttonEast.IsPressed()))
             {
                 isOpened = true;
+                text.gameObject.SetActive(false);
                 OpenDoor();
             }
         }
@@ -45,6 +46,7 @@ public class Door : MonoBehaviour
     public void OpenDoor()
     {
         GetComponent<Animator>().SetTrigger("OPENTHEDOOR");
+        CameraShake.Instance.Shake(0.05f, 2f, 0.2f);
         StartCoroutine(DoorDelay());
     }
 
@@ -63,6 +65,21 @@ public class Door : MonoBehaviour
 
         if(collision.gameObject.layer == player.GetIndex())
         {
+            canTrigger = false;
+            SceneController.Instance.NextLevel();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if(!canTrigger)
+        {
+            return;
+        }
+
+        if(collision.gameObject.layer == player.GetIndex())
+        {
+            canTrigger = false;
             SceneController.Instance.NextLevel();
         }
     }
