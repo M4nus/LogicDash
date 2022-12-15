@@ -148,8 +148,8 @@ public void Move(InputAction.CallbackContext context)
             trail.SetVector3("Start Position", oldPos);
             trail.SetVector3("End Position", nut.transform.localPosition);
             trail.SendEvent("OnDash");
-            dashEffect = Instantiate(dashEffect, transform.position, Quaternion.identity);
-            Destroy(dashEffect, 2f);
+            var dashEffectInstance = Instantiate(dashEffect, transform.position, Quaternion.identity);
+            Destroy(dashEffectInstance.gameObject, 2f);
 
             cooldown = StartCoroutine(Cooldown());
 

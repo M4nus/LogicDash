@@ -187,7 +187,7 @@ Transform:
   - {fileID: 6806073272265941780}
   - {fileID: 6806073271412156119}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6806073272144958778
 SpriteRenderer:
@@ -229,7 +229,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1947152528, guid: ac32305cb3e49fc4290b4ff8d5d5efb0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -305,6 +305,7 @@ MonoBehaviour:
   trajectory: {fileID: 0}
   line: {fileID: 6806073272265941781}
   trail: {fileID: 6806073271412156118}
+  dashEffect: {fileID: 0}
   spawnPoint: {fileID: 0}
   nutSpawnPoint: {fileID: 0}
   nutLayer:

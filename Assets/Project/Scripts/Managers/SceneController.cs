@@ -3,12 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class SceneController : SingletonPersistent<SceneController>
 {
     #region Variables
 
-    public int currentScene = 0;
+    public CanvasGroup transitionPanel;
+    public int currentScene = 1;
 
     #endregion
 
@@ -16,34 +18,45 @@ public class SceneController : SingletonPersistent<SceneController>
 
     #region Behaviour
 
-    public void Start()
+    public IEnumerator Start()
     {
         currentScene = SceneManager.GetActiveScene().buildIndex;
+        transitionPanel = GameObject.FindGameObjectWithTag("Panel").GetComponent<CanvasGroup>();
+        SceneManager.activeSceneChanged += OnSceneChanged;
+        yield return new WaitForSeconds(0.5f);
+        yield return transitionPanel.DOFade(0f, 3f);
+    }
+
+    public void OnSceneChanged(Scene sceneOld, Scene sceneNew)
+    {
+        transitionPanel = GameObject.FindGameObjectWithTag("Panel").GetComponent<CanvasGroup>();
+        transitionPanel.DOFade(0f, 1f);
     }
 
     public void ChangeLevel(int sceneIndex)
     {
-        LoadLevel(sceneIndex);
+        StartCoroutine(LoadLevel(sceneIndex));
     }
 
     public void NextLevel()
     {
-        LoadLevel(currentScene + 1);
+        StartCoroutine(LoadLevel(currentScene + 1));
     }
 
     public void PreviousLevel()
     {
-        LoadLevel(currentScene - 1);
+        StartCoroutine(LoadLevel(currentScene - 1));
     }
 
     #endregion
 
     #region Functionality
 
-    private void LoadLevel(int sceneIndex)
+    private IEnumerator LoadLevel(int sceneIndex)
     {
-        SceneManager.LoadScene(sceneIndex);
+        yield return transitionPanel.DOFade(1f, 1f).OnComplete(() => SceneManager.LoadScene(sceneIndex));
         currentScene = sceneIndex;
+        yield return new WaitForSeconds(1f);
     }
     #endregion
 }
