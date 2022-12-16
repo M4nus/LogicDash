@@ -23,6 +23,7 @@ public class SceneController : SingletonPersistent<SceneController>
         currentScene = SceneManager.GetActiveScene().buildIndex;
         transitionPanel = GameObject.FindGameObjectWithTag("Panel").GetComponent<CanvasGroup>();
         SceneManager.activeSceneChanged += OnSceneChanged;
+        transitionPanel.GetComponent<CanvasGroup>().alpha = 1f;
         yield return new WaitForSeconds(0.5f);
         yield return transitionPanel.DOFade(0f, 3f);
     }
@@ -46,6 +47,11 @@ public class SceneController : SingletonPersistent<SceneController>
     public void PreviousLevel()
     {
         StartCoroutine(LoadLevel(currentScene - 1));
+    }
+
+    public void ReloadLevel()
+    {
+        SceneManager.LoadScene(currentScene);
     }
 
     #endregion

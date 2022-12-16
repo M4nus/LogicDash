@@ -1,9 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
     public GameObject portal;
+    public List<GameObject> objectsToRestart;
+    public List<GameObject> objectsToDisable;
 
     public float spawnDelay = 0.2f;
 
@@ -13,6 +16,15 @@ public class GameManager : Singleton<GameManager>
 
     public void Spawn(Vector3 spawnPoint)
     {
+        foreach(GameObject obj in objectsToRestart)
+        {
+            obj.SetActive(true);
+        }
+        foreach(GameObject obj in objectsToDisable)
+        {
+            obj.SetActive(false);
+        }
+
         PlayerMovement player = PlayerMovement.Instance;
 
         Instantiate(portal, new Vector2(spawnPoint.x, spawnPoint.y - 0.3f), Quaternion.Euler(-90f, 0f, 0f));
@@ -29,6 +41,7 @@ public class GameManager : Singleton<GameManager>
         }
         CameraShake.Instance.Shake(0.1f, spawnDelay);
         StartCoroutine(WaitForSpawn(spawnDelay));
+        
     }
 
     public void Death()

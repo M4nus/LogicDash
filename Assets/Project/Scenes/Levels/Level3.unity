@@ -165,7 +165,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 41496214}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 8026d5d4d8a21b54b8c65458a1d57bbf, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -2196,6 +2196,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8652339634381507468, guid: 094cc3aaf7ac3cc47976d5c3e5ba8ed5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8652339635250732037, guid: 094cc3aaf7ac3cc47976d5c3e5ba8ed5, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8652339635250732043, guid: 094cc3aaf7ac3cc47976d5c3e5ba8ed5, type: 3}
+      propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

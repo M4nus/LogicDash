@@ -18,6 +18,8 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     public LayerMask nutLayer;
     public LayerMask enemiesLayer;
+    public LayerMask triggerLayer;
+    public LayerMask sleepLayer;
     public LayerMask wallLayer;
     public LayerMask groundLayer;
     public LayerMask ignoreLayer;
@@ -49,6 +51,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
     public Material lineBefore;
     public Material lineAfter;
 
+    public List<GameObject> eraseable = new List<GameObject>();
 
     #region Behaviour
 
@@ -74,7 +77,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
     {
         if(GameManager.Instance.isDead)
         {
-            if(Keyboard.current.anyKey.isPressed)
+            if(Keyboard.current.spaceKey.IsPressed() || (Gamepad.current != null && Gamepad.current.buttonSouth.IsPressed()))
             {
                 GameManager.Instance.isDead = false;
                 GameManager.Instance.Spawn(spawnPoint.position);
@@ -100,13 +103,36 @@ public class PlayerMovement : Singleton<PlayerMovement>
         }
     }
 
-#endregion
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(sleepLayer.Contains(collision.gameObject.layer))
+        {
+            GameManager.Instance.canMove = false;
+            rb.velocity = Vector2.zero;
+            anim.SetBool("isDead", true);
+            StartCoroutine(ChangeCoscienscious());
+        }
+    }
 
-#region Controls
+    #endregion
 
-public void Move(InputAction.CallbackContext context)
+    #region Controls
+
+    public void Move(InputAction.CallbackContext context)
     {
         movement = context.ReadValue<float>();
+        if(Gamepad.current != null )
+        {
+            if(movement > 0.1f)
+            {
+                movement = 1f;
+            }
+            else if(movement < -0.1f)
+            {
+                movement = -1f;   
+            }
+        }
+
         anim.SetFloat("isMoving", Mathf.Abs(movement));
         GetComponent<SpriteRenderer>().flipX = movement >= 0 ? false : true;
     }
@@ -150,7 +176,7 @@ public void Move(InputAction.CallbackContext context)
             trail.SendEvent("OnDash");
             var dashEffectInstance = Instantiate(dashEffect, transform.position, Quaternion.identity);
             Destroy(dashEffectInstance.gameObject, 2f);
-
+            RemoveTriggered();
             cooldown = StartCoroutine(Cooldown());
 
         }
@@ -167,6 +193,7 @@ public void Move(InputAction.CallbackContext context)
         {
             CameraShake.Instance.Shake(0.1f, 0.2f);
             nut.transform.localPosition = transform.localPosition;
+            RemoveTriggered();
         }
     }
 
@@ -180,15 +207,21 @@ public void Move(InputAction.CallbackContext context)
         line.SetPosition(1, (line.GetPosition(2) + line.GetPosition(0)) / 2.0f);
         line.SetPosition(2, nut.transform.localPosition);
 
-        if(Physics2D.Linecast(transform.localPosition, nut.transform.localPosition, enemiesLayer))
+        RaycastHit2D[] hits = Physics2D.LinecastAll(transform.localPosition, nut.transform.localPosition, triggerLayer);
+        if(hits.Length > 0)
         {
+            eraseable = new List<GameObject>(hits.Length);
             line.sharedMaterial = lineAfter;
+            for(int i = 0; i < hits.Length; i++)
+            {
+                eraseable.Add(hits[i].collider.gameObject);
+            }
         }
         else
         {
             line.sharedMaterial = lineBefore;
+            eraseable.Clear();
         }
-
         startPoint = transform.position;
         endPoint = camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         
@@ -217,9 +250,17 @@ public void Move(InputAction.CallbackContext context)
         trajectory.Show();
     }
 
+    public void RemoveTriggered()
+    {
+        foreach(GameObject trigger in eraseable)
+        {
+            trigger.SetActive(false);
+        }
+    }
+
     private bool IsGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector3.up, distToGround + 0.3f, ~ignoreLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector3.up, distToGround + 0.5f, ~ignoreLayer);
         bool isGrounded = (hit.collider != null);
 
         anim.SetBool("isFlying", !isGrounded);
@@ -241,6 +282,12 @@ public void Move(InputAction.CallbackContext context)
         Physics2D.IgnoreCollision(nut.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>(), false);
         isDash = false;
         canDash = true;
+    }
+
+    public IEnumerator ChangeCoscienscious()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneController.Instance.NextLevel();
     }
 
     #endregion

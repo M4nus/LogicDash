@@ -20,7 +20,7 @@ public class ImageFader : MonoBehaviour
     public InputAction changeImageAction;
 
     public float cooldown = 2f;
-    private bool inputWait = false;
+    private bool inputWait = true;
 
 
     // Start is called before the first frame update
@@ -35,9 +35,7 @@ public class ImageFader : MonoBehaviour
         {
             child.GetComponent<CanvasGroup>().DOFade(1, 2f);
         }
-
-        // Set up the input action to call the ChangeImage method when triggered
-        //changeImageAction.performed += ctx => ChangeImage();
+        StartCoroutine(Cooldown());
     }
 
     // Update is called once per frame
@@ -65,6 +63,7 @@ public class ImageFader : MonoBehaviour
         if(nextImageIndex >= images.Length)
         {
             StartCoroutine(ChangeScene());
+            return;
         }
 
         // Fade out the current image and fade in the next image simultaneously

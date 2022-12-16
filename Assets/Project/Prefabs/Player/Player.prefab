@@ -275,7 +275,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.21524131}
+  m_Offset: {x: -0.01587364, y: -0.29540306}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -286,7 +286,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.794117, y: 0.5695174}
+  m_Size: {x: 0.47981942, y: 0.40919387}
   m_EdgeRadius: 0
 --- !u!114 &6806073272144958777
 MonoBehaviour:
@@ -314,6 +314,9 @@ MonoBehaviour:
   enemiesLayer:
     serializedVersion: 2
     m_Bits: 24576
+  triggerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   wallLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -331,6 +334,7 @@ MonoBehaviour:
   hasNut: 0
   lineBefore: {fileID: 2100000, guid: 3b7827cfc8bf3bb46b5dbedb59ea0e85, type: 2}
   lineAfter: {fileID: 2100000, guid: ed3705991b82eb741834385274225df9, type: 2}
+  eraseable: []
 --- !u!114 &6806073272144958776
 MonoBehaviour:
   m_ObjectHideFlags: 0
