@@ -62,7 +62,18 @@ public class PlayerMovement : Singleton<PlayerMovement>
         anim = GetComponent<Animator>();
         distToGround = GetComponent<Collider2D>().bounds.extents.y;
 
-        GameManager.Instance.Spawn(spawnPoint.localPosition);
+        if(SceneController.Instance.currentScene != 8)
+        {
+            GameManager.Instance.Spawn(spawnPoint.localPosition);
+        }
+        else
+        {
+            GameManager.Instance.isDead = false;
+            anim.SetBool("isDead", false);
+            anim.SetBool("isStanding", true);
+            GameManager.Instance.canMove = false;
+            StartCoroutine(WaitForAnim());
+        }
     }
 
     void FixedUpdate()
@@ -110,6 +121,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
             GameManager.Instance.canMove = false;
             rb.velocity = Vector2.zero;
             anim.SetBool("isDead", true);
+            AudioManager.Instance.BlendSongs(7f);
             StartCoroutine(ChangeCoscienscious());
         }
     }
@@ -165,6 +177,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
         if(context.performed)
         {
             CameraShake.Instance.Shake(0.1f, 0.2f);
+            SoundSpawner.Instance.SpawnSound("Dash");
             oldPos = new Vector3(transform.localPosition.x, transform.localPosition.y - 0.2f, 0f);
             transform.localPosition = nut.transform.localPosition;
             rb.velocity = Vector2.zero;
@@ -192,6 +205,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
         if(context.performed)
         {
             CameraShake.Instance.Shake(0.1f, 0.2f);
+            SoundSpawner.Instance.SpawnSound("Dash");
             nut.transform.localPosition = transform.localPosition;
             RemoveTriggered();
         }
@@ -254,6 +268,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
     {
         foreach(GameObject trigger in eraseable)
         {
+            SoundSpawner.Instance.SpawnSound("Explosion");
             trigger.SetActive(false);
         }
     }
@@ -284,9 +299,16 @@ public class PlayerMovement : Singleton<PlayerMovement>
         canDash = true;
     }
 
+    public IEnumerator WaitForAnim()
+    {
+        yield return new WaitForSeconds(2f);
+        GameManager.Instance.canMove = true;
+        anim.SetBool("isStanding", false);
+    }
+
     public IEnumerator ChangeCoscienscious()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(4f);
         SceneController.Instance.NextLevel();
     }
 

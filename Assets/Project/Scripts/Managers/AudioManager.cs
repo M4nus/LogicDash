@@ -12,6 +12,9 @@ public class AudioManager : SingletonPersistent<AudioManager>
     public AudioSource[] musicSources = new AudioSource[2];
     public List<AudioClip> audioClips = new List<AudioClip>();
 
+    public AudioMixerSnapshot noEffects;
+    public AudioMixerSnapshot fullEffects;
+
     public int sourceCurrentIndex = 0;
     public int sourceNextIndex = 1;
     public int currentClip = 0;
@@ -22,21 +25,6 @@ public class AudioManager : SingletonPersistent<AudioManager>
     {
         musicSources = GetComponents<AudioSource>();
         musicSources[0].clip = audioClips[0];
-    }
-
-    public void Update()
-    {
-        if(canBePressed && Keyboard.current.tKey.isPressed)
-        {
-            canBePressed = false;
-            BlendSongs(2f);
-            Debug.Log("CurrentClip: " + currentClip);
-        }
-
-        if(Keyboard.current.iKey.isPressed)
-        {
-            canBePressed = true;
-        }
     }
 
     public void SetMasterVolume(float volume)
@@ -82,7 +70,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
         }
     }
 
-    public void BlendSongs(float blendTime)
+    public void BlendSongs(float blendTime, float volume = 0.5f)
     {
         if(currentClip + 1 == audioClips.Count)
         {
@@ -94,13 +82,19 @@ public class AudioManager : SingletonPersistent<AudioManager>
         musicSources[sourceCurrentIndex].DOFade(0, blendTime);
 
         // At the same time, fade in the volume of the second song over the blendTime
-        musicSources[sourceNextIndex].DOFade(0.5f, blendTime);
+        musicSources[sourceNextIndex].DOFade(volume, blendTime);
 
         // After the blendTime, start playing the second song
         musicSources[sourceNextIndex].PlayDelayed(blendTime);
 
         sourceCurrentIndex = sourceNextIndex;
         sourceNextIndex = sourceCurrentIndex == 0 ? 1 : 0;
+    }
+
+    public void SetSnapshot(AudioMixerSnapshot snapshotToEnable, AudioMixerSnapshot snapshotToDisable)
+    {
+        snapshotToEnable.TransitionTo(0.1f);
+        snapshotToDisable.TransitionTo(0.1f);
     }
 }
 

@@ -149,8 +149,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 57169759}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9, y: -0, z: 0}
-  m_LocalScale: {x: 28, y: 0.02, z: 1}
+  m_LocalPosition: {x: 27.2, y: -0, z: 0}
+  m_LocalScale: {x: 70, y: 0.02, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 134375023}
@@ -371,7 +371,6 @@ GameObject:
   m_Component:
   - component: {fileID: 348033307}
   - component: {fileID: 348033306}
-  - component: {fileID: 348033308}
   m_Layer: 21
   m_Name: Trigger
   m_TagString: Untagged
@@ -413,25 +412,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 348033305}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.74, y: 0.331, z: 0}
+  m_LocalPosition: {x: 39.76, y: 0.331, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &348033308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 348033305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e36e94ea62ad7246a2c86ce065494a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &509341777
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,7 +502,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 594756205}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23.003, y: 0.015, z: 0}
+  m_LocalPosition: {x: 61.53, y: 0.015, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -886,7 +873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650886660}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.02, y: 0.015, z: 0}
+  m_LocalPosition: {x: -7.553, y: 0.015, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1136,7 +1123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3170022020661241270, guid: 87a1f8303dd24774bbbd588748a2e585, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Value.x
-      value: 40
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3170022020661241271, guid: 87a1f8303dd24774bbbd588748a2e585, type: 3}
       propertyPath: m_RootOrder
@@ -1144,7 +1131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3170022020661241271, guid: 87a1f8303dd24774bbbd588748a2e585, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.57
+      value: 20.59
       objectReference: {fileID: 0}
     - target: {fileID: 3170022020661241271, guid: 87a1f8303dd24774bbbd588748a2e585, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1207,7 +1194,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4715084501477907395, guid: 8bf2f45db1671684791f52491c29d624, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.97
+      value: 57.32
       objectReference: {fileID: 0}
     - target: {fileID: 4715084501477907395, guid: 8bf2f45db1671684791f52491c29d624, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1251,7 +1238,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4715084501477907421, guid: 8bf2f45db1671684791f52491c29d624, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1351,6 +1338,10 @@ PrefabInstance:
       propertyPath: nutSpawnPoint
       value: 
       objectReference: {fileID: 1115426861}
+    - target: {fileID: 6806073272144958777, guid: d47677258416388419ff3bfeea8dd087, type: 3}
+      propertyPath: sleepLayer.m_Bits
+      value: 2097152
+      objectReference: {fileID: 0}
     - target: {fileID: 6806073272144958779, guid: d47677258416388419ff3bfeea8dd087, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -1460,7 +1451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7688935882589908106, guid: 21908e7f54017c94aa41c91eaf8556d3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

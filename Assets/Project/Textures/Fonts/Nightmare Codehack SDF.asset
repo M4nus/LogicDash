@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Nightmare Codehack SDF
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -1689352742
   material: {fileID: 6291176558588934692}
-  materialHashCode: 0
+  materialHashCode: -549663558
   m_Version: 1.1.0
   m_SourceFontFileGUID: 9d6818a627f63d0498fcdd8a11a882a6
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 9d6818a627f63d0498fcdd8a11a882a6, type: 3}
@@ -2673,9 +2673,9 @@ Material:
     - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 1
-    - _ScaleRatioB: 1
-    - _ScaleRatioC: 1
+    - _ScaleRatioA: 0.8333333
+    - _ScaleRatioB: 0.6770833
+    - _ScaleRatioC: 0.6770833
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0

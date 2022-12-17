@@ -26,6 +26,7 @@ public class ImageFader : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        SoundSpawner.Instance.SpawnSound("Forest");
         // Set the initial image to be the first game object in the array
         images[currentImageIndex].SetActive(true);
         images[currentImageIndex].GetComponent<Animator>().SetTrigger("IsActive");
@@ -62,8 +63,13 @@ public class ImageFader : MonoBehaviour
 
         if(nextImageIndex >= images.Length)
         {
+            AudioManager.Instance.SetSnapshot(AudioManager.Instance.fullEffects, AudioManager.Instance.noEffects);
             StartCoroutine(ChangeScene());
             return;
+        }
+        if(nextImageIndex == images.Length - 1)
+        {
+            AudioManager.Instance.SetSnapshot(AudioManager.Instance.noEffects, AudioManager.Instance.fullEffects);
         }
 
         // Fade out the current image and fade in the next image simultaneously
@@ -79,7 +85,6 @@ public class ImageFader : MonoBehaviour
             child.GetComponent<CanvasGroup>().DOFade(1, fadeDuration);
         }
 
-        // Set the next image index as the current image index
         images[nextImageIndex].GetComponent<Animator>().SetTrigger("IsActive");
         currentImageIndex = nextImageIndex;
 
@@ -91,9 +96,10 @@ public class ImageFader : MonoBehaviour
         {
             yield return child.GetComponent<CanvasGroup>().DOFade(0, fadeDuration);
         }
-        AudioManager.Instance.BlendSongs(2f);
+        AudioManager.Instance.BlendSongs(1f, 1f);
+        SoundSpawner.Instance.StopSound("Forest");
         yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     private IEnumerator Cooldown()

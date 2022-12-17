@@ -46,6 +46,7 @@ public class Door : MonoBehaviour
     public void OpenDoor()
     {
         GetComponent<Animator>().SetTrigger("OPENTHEDOOR");
+        SoundSpawner.Instance.SpawnSound("Door");
         CameraShake.Instance.Shake(0.05f, 2f, 0.2f);
         StartCoroutine(DoorDelay());
     }

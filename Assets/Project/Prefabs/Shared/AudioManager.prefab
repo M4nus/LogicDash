@@ -32,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2102699646634139884
 MonoBehaviour:
@@ -49,10 +49,10 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: d58f7157e41500a49b3e734d87adf1ec, type: 2}
   musicSources: []
   audioClips:
+  - {fileID: 8300000, guid: 241d593008c7d1343999d6dbe3cf0064, type: 3}
+  - {fileID: 8300000, guid: 74f87e1efc3044340a66814df975e49d, type: 3}
   - {fileID: 8300000, guid: f6d4af5151ef4c742bb5230f12e839f7, type: 3}
-  - {fileID: 8300000, guid: f6d4af5151ef4c742bb5230f12e839f7, type: 3}
-  - {fileID: 8300000, guid: f6d4af5151ef4c742bb5230f12e839f7, type: 3}
-  - {fileID: 8300000, guid: f6d4af5151ef4c742bb5230f12e839f7, type: 3}
+  - {fileID: 8300000, guid: be9761e56a1763c44b7cfbf3c4874934, type: 3}
   sourceCurrentIndex: 0
   sourceNextIndex: 1
   currentClip: 0
@@ -66,7 +66,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 1338379453289671498, guid: d58f7157e41500a49b3e734d87adf1ec, type: 2}
-  m_audioClip: {fileID: 8300000, guid: f6d4af5151ef4c742bb5230f12e839f7, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f577f76ad9410f3489d12e29bfe6aad9, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
@@ -162,7 +162,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 1338379453289671498, guid: d58f7157e41500a49b3e734d87adf1ec, type: 2}
-  m_audioClip: {fileID: 8300000, guid: f6d4af5151ef4c742bb5230f12e839f7, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f577f76ad9410f3489d12e29bfe6aad9, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1

@@ -27,6 +27,7 @@ public class GameManager : Singleton<GameManager>
 
         PlayerMovement player = PlayerMovement.Instance;
 
+        SoundSpawner.Instance.SpawnSound("Portal");
         Instantiate(portal, new Vector2(spawnPoint.x, spawnPoint.y - 0.3f), Quaternion.Euler(-90f, 0f, 0f));
         canMove = false;
         player.rb.isKinematic = true;
@@ -47,6 +48,7 @@ public class GameManager : Singleton<GameManager>
     public void Death()
     {
         PlayerMovement player = PlayerMovement.Instance;
+        SoundSpawner.Instance.SpawnSound("Squirrel");
 
         canMove = false;
         isDead = true;

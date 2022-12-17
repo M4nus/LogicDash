@@ -23,7 +23,6 @@ public class SceneController : SingletonPersistent<SceneController>
         currentScene = SceneManager.GetActiveScene().buildIndex;
         transitionPanel = GameObject.FindGameObjectWithTag("Panel").GetComponent<CanvasGroup>();
         SceneManager.activeSceneChanged += OnSceneChanged;
-        transitionPanel.GetComponent<CanvasGroup>().alpha = 1f;
         yield return new WaitForSeconds(0.5f);
         yield return transitionPanel.DOFade(0f, 3f);
     }
@@ -31,7 +30,8 @@ public class SceneController : SingletonPersistent<SceneController>
     public void OnSceneChanged(Scene sceneOld, Scene sceneNew)
     {
         transitionPanel = GameObject.FindGameObjectWithTag("Panel").GetComponent<CanvasGroup>();
-        transitionPanel.DOFade(0f, 1f);
+        transitionPanel.GetComponent<CanvasGroup>().alpha = 1f;
+        StartCoroutine(LoadTransition());
     }
 
     public void ChangeLevel(int sceneIndex)
@@ -63,6 +63,17 @@ public class SceneController : SingletonPersistent<SceneController>
         yield return transitionPanel.DOFade(1f, 1f).OnComplete(() => SceneManager.LoadScene(sceneIndex));
         currentScene = sceneIndex;
         yield return new WaitForSeconds(1f);
+    }
+
+    private IEnumerator LoadTransition()
+    {
+        float durationTime = 1f;
+        yield return new WaitForSeconds(0.5f);
+        if(currentScene == 7)
+        {
+            durationTime = 3f;
+        }
+        yield return transitionPanel.DOFade(0f, durationTime);
     }
     #endregion
 }
