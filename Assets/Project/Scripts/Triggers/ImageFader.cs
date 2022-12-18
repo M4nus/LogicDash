@@ -69,6 +69,7 @@ public class ImageFader : MonoBehaviour
         }
         if(nextImageIndex == images.Length - 1)
         {
+            SoundSpawner.Instance.StopSound("Book");
             AudioManager.Instance.SetSnapshot(AudioManager.Instance.noEffects, AudioManager.Instance.fullEffects);
         }
 

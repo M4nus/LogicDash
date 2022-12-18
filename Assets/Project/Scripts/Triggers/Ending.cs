@@ -8,9 +8,9 @@ public class Ending : MonoBehaviour
     IEnumerator Start()
     {
         SceneController.Instance.transitionPanel.GetComponent<CanvasGroup>().alpha = 1f;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         yield return SceneController.Instance.transitionPanel.DOFade(0, 3f);
-        StartCoroutine(End());
+        yield return StartCoroutine(End());
     }
 
     public IEnumerator End()

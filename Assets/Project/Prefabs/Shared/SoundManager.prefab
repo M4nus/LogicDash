@@ -47,7 +47,19 @@ MonoBehaviour:
   soundClips:
   - name: Dash
     clip: {fileID: 8300000, guid: fa4310fd94f435946b54e19a6293f5e2, type: 3}
+    volume: 0.8
   - name: Door
     clip: {fileID: 8300000, guid: 3417a868b9fc5f04083aada1a2539c9a, type: 3}
+    volume: 1
   - name: Portal
-    clip: {fileID: 8300000, guid: 5d9fa9bc2a3e2994f8bbf4b8818b73b4, type: 3}
+    clip: {fileID: 8300000, guid: b711e192fbc74974fb8d1428fd724f50, type: 3}
+    volume: 0.5
+  - name: Explosion
+    clip: {fileID: 8300000, guid: ba8362759777b2842a4810850ea36ad7, type: 3}
+    volume: 1
+  - name: Forest
+    clip: {fileID: 8300000, guid: e0987872eeac81542a3eb64e6cda7cec, type: 3}
+    volume: 1
+  - name: Squirrel
+    clip: {fileID: 8300000, guid: 73764f4231489224c945578bd0debafc, type: 3}
+    volume: 1

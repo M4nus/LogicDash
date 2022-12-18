@@ -62,12 +62,14 @@ public class PlayerMovement : Singleton<PlayerMovement>
         anim = GetComponent<Animator>();
         distToGround = GetComponent<Collider2D>().bounds.extents.y;
 
-        if(SceneController.Instance.currentScene != 8)
+        if(SceneController.Instance.currentScene != 11)
         {
             GameManager.Instance.Spawn(spawnPoint.localPosition);
         }
         else
         {
+            AudioManager.Instance.musicSources[0].pitch = 1f;
+            AudioManager.Instance.musicSources[1].pitch = 1f;
             GameManager.Instance.isDead = false;
             anim.SetBool("isDead", false);
             anim.SetBool("isStanding", true);
@@ -121,7 +123,9 @@ public class PlayerMovement : Singleton<PlayerMovement>
             GameManager.Instance.canMove = false;
             rb.velocity = Vector2.zero;
             anim.SetBool("isDead", true);
-            AudioManager.Instance.BlendSongs(7f);
+            AudioManager.Instance.BlendSongs(7f, 1f);
+            AudioManager.Instance.musicSources[0].pitch = 1f;
+            AudioManager.Instance.musicSources[1].pitch = 1f;
             StartCoroutine(ChangeCoscienscious());
         }
     }

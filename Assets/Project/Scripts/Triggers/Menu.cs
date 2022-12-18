@@ -28,7 +28,6 @@ public class Menu : MonoBehaviour
         {
             if(Keyboard.current.spaceKey.IsPressed() || (Gamepad.current != null && Gamepad.current.buttonSouth.IsPressed()))
             {
-                Debug.Log("Space ke!");
                 inputWait = true;
                 StartCoroutine(ChangeScene());
             }
